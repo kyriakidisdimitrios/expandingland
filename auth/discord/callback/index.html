@@ -119,30 +119,38 @@
         token: code
       };
 
+      /* Method 1: postMessage to parent window (bypasses storage partitioning) */
+      dbg('window.opener exists: ' + !!window.opener);
+      if (window.opener) {
+        try {
+          var msg = { type: 'legendmod_discord_login', data: discordData };
+          window.opener.postMessage(msg, '*');
+          dbg('postMessage sent to opener!');
+        } catch(e) {
+          dbg('postMessage FAILED: ' + e.message);
+        }
+      }
+
+      /* Method 2: localStorage (fallback — may not work due to storage partitioning) */
       dbg('Saving to localStorage...');
       try {
         localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
         dbg('localStorage SET OK');
-
-        /* Verify it was saved */
         var verify = localStorage.getItem('legendmod_discord');
         dbg('localStorage GET verify: ' + (verify ? 'OK (' + verify.length + ' bytes)' : 'FAILED'));
       } catch(e) {
-        dbg('localStorage ERROR: ' + e.message);
-        showError('Could not save login data: ' + e.message);
-        return;
+        dbg('localStorage FAILED: ' + e.message);
       }
 
       /* Show success */
       document.getElementById('loading').style.display = 'none';
       document.getElementById('success').style.display = 'block';
-      dbg('Success! Attempting to close popup in 1s...');
+      dbg('Success! Closing popup in 2s...');
 
       setTimeout(function() {
         dbg('Calling window.close()');
         window.close();
-        dbg('window.close() called (may not work if popup was not opened by JS)');
-      }, 1000);
+      }, 2000);
     })();
 
     function showError(msg) {
