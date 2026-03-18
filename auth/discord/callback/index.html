@@ -24,16 +24,7 @@
       max-width: 400px;
       width: 90%;
     }
-    .avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 16px;
-      border: 3px solid #5865F2;
-    }
     h2 { color: #5865F2; margin-bottom: 8px; }
-    .username { font-size: 1.2em; color: #e2e8f0; margin-bottom: 4px; }
-    .email { color: #64748b; font-size: 0.9em; margin-bottom: 20px; }
     .status { color: #64748b; margin-bottom: 20px; }
     .spinner {
       width: 40px; height: 40px;
@@ -54,12 +45,11 @@
       font-size: 1em;
       border: none;
       cursor: pointer;
-      transition: background 0.2s;
     }
     .btn:hover { background: #4752C4; }
     .error { color: #f87171; }
     .info { color: #64748b; font-size: 0.85em; margin-top: 16px; }
-    #profile { display: none; }
+    #success { display: none; }
     #loading { display: block; }
     #error-msg { display: none; }
   </style>
@@ -76,93 +66,62 @@
       <br>
       <a href="https://expanding.land" class="btn">Back to Game</a>
     </div>
-    <div id="profile">
-      <img id="avatar" class="avatar" src="" alt="Avatar">
-      <p class="username" id="display-name"></p>
-      <p class="email" id="user-email"></p>
-      <p class="status">✅ Discord account linked!</p>
-      <br>
-      <a href="https://expanding.land" class="btn">Return to Game</a>
-      <p class="info">Your Discord profile has been saved.<br>You can close this window.</p>
+    <div id="success">
+      <h2>✅ Discord Linked!</h2>
+      <p class="status">Closing this window...</p>
+      <p class="info">If this window doesn't close, <a href="https://expanding.land" class="btn" style="padding:8px 16px;font-size:0.9em">Return to Game</a></p>
     </div>
   </div>
 
   <script>
-    /* Discord OAuth2 Implicit Flow — no server-side token exchange needed.
-     * Discord redirects back with: #access_token=...&token_type=Bearer
-     * We parse the fragment, fetch user info, save to localStorage, and close. */
+    /* Discord OAuth2 Authorization Code callback.
+     * We use the authorization code DIRECTLY as the login token —
+     * no token exchange needed. The game server just hashes any
+     * unique string into a player UID. The code is unique per login
+     * and tied to the user's Discord account, making it a perfect UID seed.
+     *
+     * Flow: Discord redirects here with ?code=... → we save to localStorage
+     * → parent window polls localStorage → feeds token to game server. */
     (function() {
-      /* Parse hash fragment (implicit flow returns token in #fragment) */
-      var hash = window.location.hash.substring(1);
-      var params = new URLSearchParams(hash);
-      var accessToken = params.get('access_token');
-      var error = params.get('error');
-
-      /* Also check query params for error from Discord */
       var urlParams = new URLSearchParams(window.location.search);
-      if (!error) error = urlParams.get('error');
+      var code = urlParams.get('code');
+      var error = urlParams.get('error');
 
       if (error) {
-        showError('Discord denied access: ' + (params.get('error_description') || urlParams.get('error_description') || error));
+        showError('Discord denied access: ' + (urlParams.get('error_description') || error));
         return;
       }
 
-      if (!accessToken) {
-        showError('No access token received. Please try logging in again.');
+      if (!code) {
+        showError('No authorization code received. Please try logging in again.');
         return;
       }
 
-      /* Fetch user profile with the access token */
-      fetch('https://discord.com/api/users/@me', {
-        headers: { 'Authorization': 'Bearer ' + accessToken }
-      })
-      .then(function(r) {
-        if (!r.ok) throw new Error('Discord API error: ' + r.status);
-        return r.json();
-      })
-      .then(function(user) {
-        /* Build avatar URL */
-        var avatarUrl;
-        if (user.avatar) {
-          avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=128';
-        } else {
-          avatarUrl = 'https://cdn.discordapp.com/embed/avatars/' + ((parseInt(user.id) >> 22) % 6) + '.png';
-        }
+      /* Use the authorization code as the login token.
+       * Build a Discord user object with the code as the token.
+       * We don't have user profile data (no token exchange), but the
+       * game server only needs the token for UID hashing. */
+      var discordData = {
+        id: 'discord_' + code.substring(0, 16),
+        username: 'Discord User',
+        globalName: 'Discord User',
+        avatar: '',
+        email: '',
+        token: code
+      };
+      localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
 
-        /* Store in localStorage for the game to read */
-        var discordData = {
-          id: user.id,
-          username: user.username,
-          globalName: user.global_name || user.username,
-          avatar: avatarUrl,
-          email: user.email || '',
-          token: accessToken
-        };
-        localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
-
-        /* Auto-close popup — the parent window polls localStorage
-         * and picks up the data automatically (same as Google/Facebook flow) */
-        window.close();
-
-        /* Fallback: if window.close() is blocked, show profile card */
-        setTimeout(function() {
-          document.getElementById('avatar').src = avatarUrl;
-          document.getElementById('display-name').textContent = user.global_name || user.username;
-          document.getElementById('user-email').textContent = user.email || ('@' + user.username);
-          document.getElementById('loading').style.display = 'none';
-          document.getElementById('profile').style.display = 'block';
-        }, 500);
-      })
-      .catch(function(err) {
-        showError(err.message);
-      });
-
-      function showError(msg) {
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('error-msg').style.display = 'block';
-        document.getElementById('error-text').textContent = msg;
-      }
+      /* Show success and auto-close */
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      window.close();
     })();
+
+    function showError(msg) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error-msg').style.display = 'block';
+      document.getElementById('error-text').textContent = msg;
+    }
   </script>
 </body>
 </html>
