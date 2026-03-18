@@ -174,21 +174,19 @@
         };
         localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
 
-        // Notify parent window if in iframe
-        try {
-          if (window.opener) {
-            window.opener.postMessage({ type: 'discord_auth', data: discordData }, '*');
-          }
-        } catch(e) {}
+        // Auto-close popup — the parent window polls localStorage
+        // and picks up the data automatically (same as Google/Facebook flow)
+        window.close();
 
-        // Show profile, hide loading
-        document.getElementById('loading').style.display = 'none';
-        document.getElementById('profile').style.display = 'block';
-
-        // Clean URL
-        if (history.replaceState) {
-          history.replaceState(null, '', window.location.pathname);
-        }
+        // Fallback: if window.close() is blocked (e.g. not opened as popup),
+        // show the profile card so user can manually close
+        setTimeout(function() {
+          document.getElementById('avatar').src = avatarUrl;
+          document.getElementById('display-name').textContent = user.global_name || user.username;
+          document.getElementById('user-email').textContent = user.email || ('@' + user.username);
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('profile').style.display = 'block';
+        }, 500);
       })
       .catch(function(err) {
         showError(err.message);
