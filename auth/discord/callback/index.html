@@ -43,12 +43,12 @@
       text-decoration: none;
       border-radius: 8px;
       font-size: 1em;
-      border: none;
-      cursor: pointer;
     }
-    .btn:hover { background: #4752C4; }
     .error { color: #f87171; }
     .info { color: #64748b; font-size: 0.85em; margin-top: 16px; }
+    #debug { text-align: left; font-family: monospace; font-size: 11px; color: #4ade80;
+             background: #0d1117; padding: 12px; border-radius: 8px; margin-top: 16px;
+             max-height: 200px; overflow-y: auto; white-space: pre-wrap; }
     #success { display: none; }
     #loading { display: block; }
     #error-msg { display: none; }
@@ -71,36 +71,45 @@
       <p class="status">Closing this window...</p>
       <p class="info">If this window doesn't close, <a href="https://expanding.land" class="btn" style="padding:8px 16px;font-size:0.9em">Return to Game</a></p>
     </div>
+    <div id="debug"></div>
   </div>
 
   <script>
-    /* Discord OAuth2 Authorization Code callback.
-     * We use the authorization code DIRECTLY as the login token —
-     * no token exchange needed. The game server just hashes any
-     * unique string into a player UID. The code is unique per login
-     * and tied to the user's Discord account, making it a perfect UID seed.
-     *
-     * Flow: Discord redirects here with ?code=... → we save to localStorage
-     * → parent window polls localStorage → feeds token to game server. */
+    var debugEl = document.getElementById('debug');
+    function dbg(msg) {
+      console.log('[CALLBACK] ' + msg);
+      debugEl.textContent += msg + '\n';
+    }
+
     (function() {
+      dbg('Callback page loaded');
+      dbg('URL: ' + window.location.href);
+      dbg('Search: ' + window.location.search);
+      dbg('Hash: ' + window.location.hash);
+
       var urlParams = new URLSearchParams(window.location.search);
       var code = urlParams.get('code');
       var error = urlParams.get('error');
 
+      dbg('code param: ' + (code ? code.substring(0, 20) + '...' : 'null'));
+      dbg('error param: ' + error);
+
       if (error) {
-        showError('Discord denied access: ' + (urlParams.get('error_description') || error));
+        var desc = urlParams.get('error_description') || error;
+        dbg('ERROR from Discord: ' + desc);
+        showError('Discord denied access: ' + desc);
         return;
       }
 
       if (!code) {
+        dbg('ERROR: No code in URL params');
         showError('No authorization code received. Please try logging in again.');
         return;
       }
 
-      /* Use the authorization code as the login token.
-       * Build a Discord user object with the code as the token.
-       * We don't have user profile data (no token exchange), but the
-       * game server only needs the token for UID hashing. */
+      dbg('Got authorization code! Length=' + code.length);
+
+      /* Build Discord user data with the code as token */
       var discordData = {
         id: 'discord_' + code.substring(0, 16),
         username: 'Discord User',
@@ -109,12 +118,31 @@
         email: '',
         token: code
       };
-      localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
 
-      /* Show success and auto-close */
+      dbg('Saving to localStorage...');
+      try {
+        localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
+        dbg('localStorage SET OK');
+
+        /* Verify it was saved */
+        var verify = localStorage.getItem('legendmod_discord');
+        dbg('localStorage GET verify: ' + (verify ? 'OK (' + verify.length + ' bytes)' : 'FAILED'));
+      } catch(e) {
+        dbg('localStorage ERROR: ' + e.message);
+        showError('Could not save login data: ' + e.message);
+        return;
+      }
+
+      /* Show success */
       document.getElementById('loading').style.display = 'none';
       document.getElementById('success').style.display = 'block';
-      window.close();
+      dbg('Success! Attempting to close popup in 1s...');
+
+      setTimeout(function() {
+        dbg('Calling window.close()');
+        window.close();
+        dbg('window.close() called (may not work if popup was not opened by JS)');
+      }, 1000);
     })();
 
     function showError(msg) {
