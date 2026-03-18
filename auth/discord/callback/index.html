@@ -66,21 +66,16 @@
 </head>
 <body>
   <div class="card">
-    <!-- Loading state -->
     <div id="loading">
       <div class="spinner"></div>
       <p class="status">Connecting to Discord...</p>
     </div>
-
-    <!-- Error state -->
     <div id="error-msg">
       <h2 class="error">Login Failed</h2>
       <p class="status" id="error-text"></p>
       <br>
       <a href="https://expanding.land" class="btn">Back to Game</a>
     </div>
-
-    <!-- Profile state -->
     <div id="profile">
       <img id="avatar" class="avatar" src="" alt="Avatar">
       <p class="username" id="display-name"></p>
@@ -93,58 +88,74 @@
   </div>
 
   <script>
-    /* Discord OAuth2 Implicit Flow callback handler.
-     * Uses response_type=token so no client secret is needed.
-     * The access token comes in the URL fragment (hash). */
+    /* Discord OAuth2 Authorization Code Flow — client-side exchange.
+     * Handles response_type=code from Discord's redirect. */
     (function() {
       var CLIENT_ID = '1483502380661346396';
+      var CLIENT_SECRET = 'KAo-NxxmfcauMWRUR3C_TXu5fz5O4Kyk';
+      var REDIRECT_URI = 'https://expanding.land/auth/discord/callback';
 
-      // Parse the hash fragment for access_token
-      var hash = window.location.hash.substring(1);
-      var params = {};
-      hash.split('&').forEach(function(pair) {
-        var kv = pair.split('=');
-        params[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || '');
-      });
+      var urlParams = new URLSearchParams(window.location.search);
+      var code = urlParams.get('code');
+      var error = urlParams.get('error');
 
-      var token = params.access_token;
-
-      if (!token) {
-        // No token in hash — check for error or show login button
-        var urlParams = new URLSearchParams(window.location.search);
-        var error = urlParams.get('error');
-        if (error) {
-          showError('Discord denied access: ' + (urlParams.get('error_description') || error));
-        } else {
-          // No token, no error — redirect to Discord authorize
-          var redirectUri = encodeURIComponent(window.location.origin + '/auth/discord/callback');
-          var authUrl = 'https://discord.com/oauth2/authorize' +
-            '?client_id=' + CLIENT_ID +
-            '&response_type=token' +
-            '&redirect_uri=' + redirectUri +
-            '&scope=identify%20email';
-          window.location.href = authUrl;
-        }
+      if (error) {
+        showError('Discord denied access: ' + (urlParams.get('error_description') || error));
         return;
       }
 
-      // We have a token — fetch user profile from Discord API
-      fetch('https://discord.com/api/users/@me', {
-        headers: { 'Authorization': 'Bearer ' + token }
+      if (!code) {
+        // No code — redirect to Discord authorize
+        var authUrl = 'https://discord.com/oauth2/authorize' +
+          '?client_id=' + CLIENT_ID +
+          '&response_type=code' +
+          '&redirect_uri=' + encodeURIComponent(REDIRECT_URI) +
+          '&scope=identify+email';
+        window.location.href = authUrl;
+        return;
+      }
+
+      // Exchange code for access token
+      var body = new URLSearchParams();
+      body.append('client_id', CLIENT_ID);
+      body.append('client_secret', CLIENT_SECRET);
+      body.append('grant_type', 'authorization_code');
+      body.append('code', code);
+      body.append('redirect_uri', REDIRECT_URI);
+
+      fetch('https://discord.com/api/oauth2/token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString()
       })
       .then(function(r) {
-        if (!r.ok) throw new Error('Discord API error: ' + r.status);
+        if (!r.ok) throw new Error('Token exchange failed: ' + r.status);
         return r.json();
       })
-      .then(function(user) {
+      .then(function(tokenData) {
+        var accessToken = tokenData.access_token;
+        if (!accessToken) throw new Error('No access token received');
+
+        // Fetch user profile
+        return fetch('https://discord.com/api/users/@me', {
+          headers: { 'Authorization': 'Bearer ' + accessToken }
+        }).then(function(r) {
+          if (!r.ok) throw new Error('Discord API error: ' + r.status);
+          return r.json();
+        }).then(function(user) {
+          return { user: user, token: accessToken };
+        });
+      })
+      .then(function(result) {
+        var user = result.user;
+        var token = result.token;
+
         // Build avatar URL
         var avatarUrl;
         if (user.avatar) {
           avatarUrl = 'https://cdn.discordapp.com/avatars/' + user.id + '/' + user.avatar + '.png?size=128';
         } else {
-          // Default avatar
-          var defaultIndex = (parseInt(user.discriminator) || 0) % 5;
-          avatarUrl = 'https://cdn.discordapp.com/embed/avatars/' + defaultIndex + '.png';
+          avatarUrl = 'https://cdn.discordapp.com/embed/avatars/' + ((parseInt(user.id) >> 22) % 6) + '.png';
         }
 
         // Display profile
@@ -163,18 +174,18 @@
         };
         localStorage.setItem('legendmod_discord', JSON.stringify(discordData));
 
-        // Also set on window for immediate access from game iframe
+        // Notify parent window if in iframe
         try {
-          if (window.parent && window.parent !== window) {
-            window.parent.postMessage({ type: 'discord_auth', data: discordData }, '*');
+          if (window.opener) {
+            window.opener.postMessage({ type: 'discord_auth', data: discordData }, '*');
           }
-        } catch(e) { /* cross-origin, ignore */ }
+        } catch(e) {}
 
-        // Show profile
+        // Show profile, hide loading
         document.getElementById('loading').style.display = 'none';
         document.getElementById('profile').style.display = 'block';
 
-        // Clear the hash (token) from URL for security
+        // Clean URL
         if (history.replaceState) {
           history.replaceState(null, '', window.location.pathname);
         }
