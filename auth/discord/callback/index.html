@@ -113,8 +113,9 @@
         'https://legendmod.ml'
       ];
       var targetOrigin = 'https://jimboy3100.github.io'; /* default */
-      if (state && allowedOrigins.indexOf(decodeURIComponent(state)) !== -1) {
-        targetOrigin = decodeURIComponent(state);
+      /* Note: URLSearchParams.get() already URL-decodes, so no decodeURIComponent needed */
+      if (state && allowedOrigins.indexOf(state) !== -1) {
+        targetOrigin = state;
       }
 
       var relayUrl = targetOrigin + '/auth/discord/relay.html?code=' + encodeURIComponent(code);
