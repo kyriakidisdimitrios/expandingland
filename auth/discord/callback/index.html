@@ -45,22 +45,28 @@
       font-size: 1em;
     }
     .error { color: #f87171; }
+    .success { color: #4ade80; }
     .info { color: #64748b; font-size: 0.85em; margin-top: 16px; }
     #debug { text-align: left; font-family: monospace; font-size: 11px; color: #4ade80;
              background: #0d1117; padding: 12px; border-radius: 8px; margin-top: 16px;
-             max-height: 200px; overflow-y: auto; white-space: pre-wrap; }
-    #loading { display: block; }
-    #error-msg { display: none; }
+             max-height: 200px; overflow-y: auto; white-space: pre-wrap; display: none; }
   </style>
 </head>
 <body>
   <div class="card">
-      <img src="https://jimboy3100.github.io/banners/icon128croped.gif" alt="LegendMod" style="width:64px;height:64px;margin-bottom:16px;border-radius:12px;">
+    <img src="https://jimboy3100.github.io/banners/icon128croped.gif" alt="LegendMod"
+         style="width:64px;height:64px;margin-bottom:16px;border-radius:12px;">
     <div id="loading">
       <div class="spinner"></div>
       <p class="status">Connecting to Discord...</p>
     </div>
-    <div id="error-msg">
+    <div id="done" style="display:none">
+      <h2 class="success">✅ Discord Linked!</h2>
+      <p class="status">Closing this window...</p>
+      <p class="info">If this window doesn't close,
+        <a href="javascript:window.close()" class="btn" style="padding:8px 16px;font-size:0.9em">Close Window</a></p>
+    </div>
+    <div id="error-msg" style="display:none">
       <h2 class="error">Login Failed</h2>
       <p class="status" id="error-text"></p>
       <br>
@@ -77,50 +83,96 @@
     }
 
     (function() {
-      dbg('Callback page loaded');
-      dbg('URL: ' + window.location.href);
+      dbg('Callback page loaded on: ' + window.location.origin);
 
       var urlParams = new URLSearchParams(window.location.search);
       var code = urlParams.get('code');
       var error = urlParams.get('error');
-      var state = urlParams.get('state');
-
-      dbg('code param: ' + (code ? code.substring(0, 20) + '...' : 'null'));
-      dbg('error param: ' + error);
-      dbg('state param: ' + state);
 
       if (error) {
-        var desc = urlParams.get('error_description') || error;
-        dbg('ERROR from Discord: ' + desc);
-        showError('Discord denied access: ' + desc);
+        showError('Discord denied access: ' + (urlParams.get('error_description') || error));
         return;
       }
-
       if (!code) {
-        dbg('ERROR: No code in URL params');
         showError('No authorization code received. Please try logging in again.');
         return;
       }
 
       dbg('Got authorization code! Length=' + code.length);
 
-      /* Redirect to the same-origin relay page on the game's domain.
-       * The state parameter tells us which origin opened the popup.
-       * The relay page is on the same origin as the game, so localStorage
-       * and BroadcastChannel work perfectly. */
-      var allowedOrigins = [
-        'https://jimboy3100.github.io',
-        'https://legendmod.ml'
-      ];
-      var targetOrigin = 'https://jimboy3100.github.io'; /* default */
-      /* Note: URLSearchParams.get() already URL-decodes, so no decodeURIComponent needed */
-      if (state && allowedOrigins.indexOf(state) !== -1) {
-        targetOrigin = state;
+      /* Build Discord user data — the code IS the token for our system */
+      var discordData = {
+        id: 'discord_' + code.substring(0, 16),
+        username: 'Discord User',
+        globalName: 'Discord User',
+        avatar: '',
+        email: '',
+        token: code
+      };
+      var msg = { type: 'legendmod_discord_login', data: discordData };
+
+      /*
+       * STRATEGY: This callback page is on expanding.land.
+       * The game (play.html) runs inside an iframe at jimboy3100.github.io.
+       * Chrome's storage partitioning means we CANNOT use localStorage or
+       * BroadcastChannel to talk to a different origin's iframe.
+       *
+       * What DOES work:
+       * 1. Store data in expanding.land's localStorage
+       * 2. The expanding.land parent page (index.html) watches for this
+       *    and forwards it into the iframe via postMessage
+       * 3. Also try window.opener.postMessage as a fast path
+       */
+
+      /* Method 1: Store in expanding.land's localStorage.
+       * The parent page (index.html) polls for this. */
+      try {
+        localStorage.setItem('legendmod_discord_pending', JSON.stringify(discordData));
+        dbg('localStorage SET on expanding.land origin — OK');
+      } catch(e) {
+        dbg('localStorage failed: ' + e.message);
       }
 
-      var relayUrl = targetOrigin + '/auth/discord/relay.html?code=' + encodeURIComponent(code);
-      dbg('Redirecting to relay: ' + relayUrl);
-      window.location.href = relayUrl;
+      /* Method 2: postMessage to opener (may be the iframe or parent) */
+      if (window.opener) {
+        try {
+          window.opener.postMessage(msg, '*');
+          dbg('postMessage sent to opener!');
+          /* Also try reaching iframes inside the opener */
+          try {
+            for (var i = 0; i < window.opener.frames.length; i++) {
+              window.opener.frames[i].postMessage(msg, '*');
+            }
+            dbg('postMessage sent to ' + window.opener.frames.length + ' frame(s)');
+          } catch(e2) {
+            dbg('Could not access opener frames: ' + e2.message);
+          }
+        } catch(e) {
+          dbg('postMessage to opener failed: ' + e.message);
+        }
+      } else {
+        dbg('window.opener is null');
+      }
+
+      /* Method 3: BroadcastChannel on expanding.land origin */
+      try {
+        var bc = new BroadcastChannel('legendmod_discord_expanding');
+        bc.postMessage(msg);
+        dbg('BroadcastChannel sent on expanding.land origin');
+        bc.close();
+      } catch(e) {
+        dbg('BroadcastChannel failed: ' + e.message);
+      }
+
+      /* Show success UI */
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('done').style.display = 'block';
+
+      /* Auto-close after 2 seconds */
+      setTimeout(function() {
+        dbg('Attempting to close popup...');
+        window.close();
+      }, 2000);
     })();
 
     function showError(msg) {

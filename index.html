@@ -213,6 +213,79 @@
     </div>
   </noscript>
 
-  <iframe src="https://jimboy3100.github.io/play.html" allowfullscreen></iframe>
+  <iframe id="game-frame" src="https://jimboy3100.github.io/play.html" allowfullscreen></iframe>
+
+  <script>
+    /**
+     * Discord Login Relay
+     * ───────────────────
+     * The Discord callback popup stores auth data in expanding.land's localStorage.
+     * This script picks it up and forwards it into the game iframe via postMessage.
+     * This is the ONLY reliable way to bridge the cross-origin gap between
+     * expanding.land (parent) and jimboy3100.github.io (iframe).
+     */
+    (function() {
+      var IFRAME_ORIGINS = ['https://jimboy3100.github.io', 'https://legendmod.ml'];
+      var STORAGE_KEY    = 'legendmod_discord_pending';
+      var MSG_TYPE       = 'legendmod_discord_login';
+
+      function getFrame() { return document.getElementById('game-frame'); }
+
+      function relayToIframe(discordData) {
+        var frame = getFrame();
+        if (!frame || !frame.contentWindow) return;
+        var msg = { type: MSG_TYPE, data: discordData };
+        for (var i = 0; i < IFRAME_ORIGINS.length; i++) {
+          try {
+            frame.contentWindow.postMessage(msg, IFRAME_ORIGINS[i]);
+          } catch(e) {}
+        }
+        // Also try wildcard as last resort
+        try { frame.contentWindow.postMessage(msg, '*'); } catch(e) {}
+        console.log('[EL Relay] Forwarded Discord data into iframe');
+        // Clean up
+        try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+      }
+
+      // Method 1: BroadcastChannel (same-origin, from callback popup)
+      try {
+        var bc = new BroadcastChannel('legendmod_discord_expanding');
+        bc.onmessage = function(event) {
+          if (event.data && event.data.type === MSG_TYPE && event.data.data) {
+            console.log('[EL Relay] Received via BroadcastChannel');
+            relayToIframe(event.data.data);
+          }
+        };
+      } catch(e) {}
+
+      // Method 2: Listen for postMessage from callback popup
+      window.addEventListener('message', function(event) {
+        if (event.origin !== 'https://expanding.land') return;
+        if (event.data && event.data.type === MSG_TYPE && event.data.data) {
+          console.log('[EL Relay] Received via postMessage');
+          relayToIframe(event.data.data);
+        }
+      });
+
+      // Method 3: Poll localStorage for pending Discord data
+      // (most reliable — callback popup writes here, we read it)
+      var pollCount = 0;
+      var poll = setInterval(function() {
+        pollCount++;
+        if (pollCount > 120) { clearInterval(poll); return; } // stop after 2 min
+        try {
+          var data = localStorage.getItem(STORAGE_KEY);
+          if (data) {
+            clearInterval(poll);
+            var parsed = JSON.parse(data);
+            if (parsed && parsed.token) {
+              console.log('[EL Relay] Found pending Discord data in localStorage');
+              relayToIframe(parsed);
+            }
+          }
+        } catch(e) {}
+      }, 1000);
+    })();
+  </script>
 </body>
 </html>
