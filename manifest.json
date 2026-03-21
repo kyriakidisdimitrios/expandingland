@@ -24,24 +24,12 @@
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "https://jimboy3100.github.io/banners/icon128.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "https://jimboy3100.github.io/banners/icon128.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
     }
   ],
   "screenshots": [
     {
       "src": "https://jimboy3100.github.io/banners/iconexpanding-land.png",
-      "sizes": "1612x1046",
+      "sizes": "1536x1024",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Expanding Land gameplay"
