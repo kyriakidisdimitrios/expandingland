@@ -1,0 +1,7 @@
+# Signing keys — NEVER commit these to git
+signing.keystore
+signing-key-info.txt
+
+# Large binaries — keep locally, upload to Play Console directly
+*.aab
+*.apk
