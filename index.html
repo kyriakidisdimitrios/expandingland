@@ -177,7 +177,13 @@
   <!-- ═══ Favicon ═══ -->
   <link rel="icon" href="https://jimboy3100.github.io/banners/expanding_ico.ico" type="image/x-icon">
   <link rel="shortcut icon" href="https://jimboy3100.github.io/banners/expanding_ico.ico" type="image/x-icon">
-  <link rel="apple-touch-icon" href="https://jimboy3100.github.io/banners/expanding_ico.ico">
+  <link rel="apple-touch-icon" href="https://jimboy3100.github.io/banners/iconexpanding-land2.png">
+
+  <!-- iOS: Add to Home Screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Expanding Land">
+
   <link rel="manifest" href="/manifest.json">
 
   <style>
@@ -284,6 +290,20 @@
         } catch(e) {}
       }, 1000);
     })();
+  </script>
+
+  <!-- PWA: Register service worker ONLY when running as installed app -->
+  <script>
+    var _isApp = window.matchMedia('(display-mode: standalone)').matches ||
+                 window.matchMedia('(display-mode: fullscreen)').matches ||
+                 navigator.standalone === true;
+    if (_isApp && 'serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').then(function(reg) {
+            console.log('[EL PWA] Service worker registered, scope:', reg.scope);
+        }).catch(function(err) {
+            console.log('[EL PWA] Service worker registration failed:', err);
+        });
+    }
   </script>
 </body>
 </html>
