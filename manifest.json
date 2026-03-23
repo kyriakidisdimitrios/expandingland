@@ -48,8 +48,8 @@
     }
   ],
   "scope_extensions": [
-    { "origin": "https://jimboy3100.github.io" },
-    { "origin": "https://legendmod.ml" }
+    { "type": "origin", "origin": "https://jimboy3100.github.io" },
+    { "type": "origin", "origin": "https://legendmod.ml" }
   ],
   "related_applications": [],
   "prefer_related_applications": false
