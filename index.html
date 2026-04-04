@@ -201,6 +201,19 @@
               "duration": "PT0M25S",
               "contentUrl": "https://www.youtube.com/watch?v=fWlrAHVtZHc",
               "embedUrl": "https://www.youtube.com/embed/fWlrAHVtZHc"
+          },
+          {
+              "@type": "SoftwareApplication",
+              "name": "Expanding Land Android App",
+              "operatingSystem": "Android",
+              "applicationCategory": "GameApplication",
+              "applicationSubCategory": "IO Game",
+              "downloadUrl": "https://github.com/jimboy3100/jimboy3100.github.io/raw/refs/heads/master/LMexpress/mobileApp/ExpandingLand-v2.apk",
+              "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+              }
           }
       ]
   }
@@ -353,6 +366,40 @@
             console.log('[EL PWA] Service worker registration failed:', err);
         });
     }
+  </script>
+
+  <!-- Android APK Banner -->
+  <script>
+    (function(){
+      if (/Android/i.test(navigator.userAgent) && !window._isApp) {
+        var banner = document.createElement('div');
+        banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:linear-gradient(135deg, #16a34a, #22c55e);color:#fff;padding:12px 16px;z-index:999999;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 12px rgba(0,0,0,0.3);font-family:sans-serif;box-sizing:border-box;';
+        
+        var content = document.createElement('div');
+        content.style.cssText = 'display:flex;align-items:center;gap:12px;';
+        content.innerHTML = '<span style="font-size:28px;">📱</span><div><div style="font-weight:900;font-size:15px;letter-spacing:0.5px;">Expanding Land App</div><div style="font-size:12px;opacity:0.95;">No browser bars. Better performance.</div></div>';
+        
+        var actions = document.createElement('div');
+        actions.style.cssText = 'display:flex;align-items:center;gap:15px;';
+        
+        var downloadBtn = document.createElement('a');
+        downloadBtn.href = 'https://github.com/jimboy3100/jimboy3100.github.io/raw/refs/heads/master/LMexpress/mobileApp/ExpandingLand-v2.apk';
+        downloadBtn.innerText = 'INSTALL';
+        downloadBtn.style.cssText = 'background:#fff;color:#16a34a;padding:8px 16px;border-radius:24px;font-weight:900;text-decoration:none;font-size:12px;text-transform:uppercase;box-shadow:0 2px 6px rgba(0,0,0,0.2);';
+        
+        var closeBtn = document.createElement('button');
+        closeBtn.innerHTML = '✕';
+        closeBtn.style.cssText = 'background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;line-height:1;';
+        closeBtn.onclick = function() { document.body.removeChild(banner); };
+        
+        actions.appendChild(downloadBtn);
+        actions.appendChild(closeBtn);
+        
+        banner.appendChild(content);
+        banner.appendChild(actions);
+        document.body.prepend(banner);
+      }
+    })();
   </script>
 </body>
 </html>
