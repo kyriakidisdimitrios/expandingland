@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Expanding Land",
   "short_name": "Expanding Land",
-  "description": "Free multiplayer IO game with 720 real players, no bots. Resizable map (0.25x to 8x), anti-cheat, encrypted connections, ultra-low latency.",
+  "description": "Free multiplayer IO game with 1024 real players, no bots. Resizable map (0.25x to 8x), anti-cheat, encrypted connections, ultra-low latency.",
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",
