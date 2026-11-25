@@ -11,9 +11,17 @@
 - [Glossary](https://help.expanding.land/glossary.html): 40+ game terms.
 - [Dynamic map](https://help.expanding.land/dynamic-map.html): expansion and contraction.
 - [Players and bots](https://help.expanding.land/no-bots.html): population distinctions.
-- [Controls](https://expanding.land/knowledge/controls.json): default keyboard and mouse bindings.
+- [Controls](https://expanding.land/knowledge/controls.json): default keyboard, mouse and gamepad bindings.
 - [FAQ](https://expanding.land/knowledge/faq.json): frequently asked questions.
+- [Glossary (JSON)](https://expanding.land/knowledge/glossary.json): 30+ game terms defined.
+- [Techniques](https://expanding.land/knowledge/techniques.json): advanced gameplay techniques.
+- [Settings](https://expanding.land/knowledge/settings.json): 300+ settings across 30 categories.
+- [Features (JSON)](https://expanding.land/knowledge/features.json): 28 feature descriptions.
+- [Mechanics (JSON)](https://expanding.land/knowledge/mechanics.json): 12 core game mechanics.
+- [Resources (JSON)](https://expanding.land/knowledge/resources.json): 35+ official page links.
 - [Project facts](https://expanding.land/knowledge/): entity identifiers.
 
 - [Consolidated documentation](https://expanding.land/llms-full.txt): verified core facts, mechanics, controls, FAQ and links.
 - [Knowledge API](https://expanding.land/knowledge/api.json): public read-only JSON resources.
+- [Knowledge graph (JSON-LD)](https://expanding.land/knowledge/graph.jsonld): 32-entity structured data graph.
+
