@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://expanding.land/</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://expanding.land/privacy.html</loc></url>
-  <url><loc>https://expanding.land/terms.html</loc></url>
+  <url><loc>https://expanding.land/privacy.html</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://expanding.land/terms.html</loc><lastmod>2026-11-25</lastmod></url>
   <url><loc>https://expanding.land/knowledge/</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://expanding.land/skins/</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://expanding.land/themes/</loc><lastmod>2026-11-25</lastmod></url>
+  <url><loc>https://expanding.land/apps/android/</loc><lastmod>2026-11-25</lastmod></url>
 </urlset>

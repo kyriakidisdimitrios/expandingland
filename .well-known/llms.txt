@@ -1,0 +1,4 @@
+# Expanding Land LLM Information
+# See: https://expanding.land/llms.txt
+# See: https://expanding.land/llms-full.txt
+# This is a redirect hint — the main files are at the root.
