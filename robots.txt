@@ -1,4 +1,7 @@
+# Public search and AI discovery: Googlebot, Bingbot, OAI-SearchBot, GPTBot, Claude-SearchBot, ClaudeBot, Google-Extended, PerplexityBot and CCBot.
+# Wildcard policy permits public content. Robots rules are not access control.
 User-agent: *
 Allow: /
+Disallow: /auth/discord/callback/
 
 Sitemap: https://expanding.land/sitemap.xml
