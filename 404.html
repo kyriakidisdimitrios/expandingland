@@ -86,18 +86,23 @@
       50% { transform: translateY(-30px) scale(1.1); }
     }
   </style>
+    <!-- texts in the visitor's language (Legend Mod's language packs, developers/i18n) -->
+    <script src="https://www.legendmod.ml/lib/lm-i18n.js" data-areas="site-expandingland-404" charset="utf-8"></script>
 </head>
 <body>
+  <!-- the page language (Legend Mod's language packs); the choice is saved on this site and passed to Legend pages -->
+  <div class="lm-lang-bar" style="text-align:right;padding:6px 12px;font-size:14px;line-height:1.4"><span data-lm-lang-picker></span></div>
+
   <div class="cell"></div>
   <div class="cell"></div>
   <div class="cell"></div>
   <div class="container">
     <div class="code">404</div>
-    <h1>This cell got eaten!</h1>
-    <p>The page you're looking for doesn't exist or has been moved. But the game is still running — jump back in!</p>
-    <a href="https://expanding.land/" class="btn">🎮 Play Expanding Land</a>
+    <h1 data-i18n="site.expandingland.404.thisCellGotEaten">This cell got eaten!</h1>
+    <p data-i18n="site.expandingland.404.thePageYouRe">The page you're looking for doesn't exist or has been moved. But the game is still running — jump back in!</p>
+    <a data-i18n="site.expandingland.404.playExpandingLand" href="https://expanding.land/" class="btn">🎮 Play Expanding Land</a>
     <div class="links">
-      <a href="https://help.expanding.land/">Help & Guide</a>
+      <a data-i18n="site.expandingland.404.helpGuide" href="https://help.expanding.land/">Help & Guide</a>
       <a href="https://discord.com/invite/JUfpR9k">Discord</a>
     </div>
   </div>
