@@ -5,3 +5,7 @@ Allow: /
 Disallow: /auth/discord/callback/
 
 Sitemap: https://expanding.land/sitemap.xml
+
+# LLM discovery (llms.txt standard)
+# https://expanding.land/llms.txt
+# https://expanding.land/llms-full.txt
