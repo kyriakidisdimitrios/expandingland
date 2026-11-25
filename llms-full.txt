@@ -140,6 +140,177 @@ Tracked per life: time alive, highest mass, food eaten, players eaten.
 - Custom skins via Legend Mod
 - Encrypted connections (WSS/TLS)
 
+## Default Controls
+
+### Keyboard — Core Gameplay
+| Key | Action |
+|-----|--------|
+| Space | Split (divide cell into two halves, up to 16 fragments) |
+| W | Eject mass (small pellet fired toward cursor, costs ~15-16 mass) |
+| E | Macro feed (hold to rapid-fire mass ejection) |
+| Ctrl+E | Permanent macro feed (toggle on/off) |
+| Q | Double split (two rapid splits for extended range) |
+| Alt+Q | Pop split (virus pop combined with split) |
+| Shift | Split into 16 fragments (maximum split) |
+| R | Pause cell movement (freeze position) |
+| Alt+R | Dance (hold — cells wiggle in place) |
+| Enter | Open chat input / send message |
+| Y | Quick response (send preset message) |
+| Escape | Open menu / enter free spectate |
+| Tab | Toggle leaderboard / team panel |
+| Ctrl+K | Open Command Centre (fuzzy search palette) |
+| J | Autoplay |
+| Z | Reset zoom (hold) |
+| + | Quit game (respawn) |
+| - | Switch server mode |
+| = | Voice chat (push-to-talk) |
+| ~ | Multibox follow mouse |
+
+### Keyboard — Toggle Hotkeys
+| Key | Action |
+|-----|--------|
+| T | Toggle top 5 / team panel |
+| Alt+T | Toggle time display |
+| U | Toggle split range circles |
+| I | Toggle split indicators |
+| Alt+I | Toggle teammates indicators |
+| O | Toggle opponent colours |
+| A | Toggle skins (all) |
+| S | Toggle custom skins |
+| Alt+S | Toggle stats HUD |
+| D | Toggle cells (ghost cells) |
+| F | Toggle food visibility |
+| G | Toggle grid |
+| Alt+G | Toggle minimap guides |
+| H | Hide/show chat |
+| Alt+H | Toggle HUD |
+| K | Toggle ghost cells info |
+| L | Copy leaderboard |
+| Alt+L | Toggle leaderboard |
+| M | Toggle mass display |
+| Alt+M | Toggle minimap |
+| N | Toggle names |
+| B | Toggle background sectors |
+| Alt+B | Hide small bots |
+| V | Toggle spectator mode |
+| C | Show/clear chat history (hold) |
+| X | Toggle death location |
+
+### Keyboard — Zoom Levels
+| Key | Zoom Factor |
+|-----|-------------|
+| Alt+1 | 0.5 (closest) |
+| Alt+2 | 0.25 |
+| Alt+3 | 0.125 |
+| Alt+4 | 0.075 |
+| Alt+5 | 0.05 (farthest) |
+
+### Mouse
+| Button | Default Action |
+|--------|---------------|
+| Movement | Cell follows cursor direction |
+| Left click | Macro feed (configurable) |
+| Right click | Split (configurable) |
+| Middle click | Multibox swap (configurable) |
+| Mouse 4 (back) | Double split |
+| Mouse 5 (forward) | 16-split |
+| Scroll wheel | Zoom in/out |
+
+### Gamepad
+Full gamepad/controller support with customizable button mapping (16 buttons). Default: A=split, B=feed, X=doubleSplit, Y=respawn, LB=multiboxSwap, RB=split16, Start=menu. Settings: dead zone (0.05-0.5), response curve (0.5-3), zoom sensitivity (0.2-4).
+
+### Chat Commands
+50 customizable chat command slots with one-keypress sending. Keys 1-9, 0, arrow keys, Ctrl+1-5, Ctrl+7-9, Ctrl+0, Ctrl+Z/X/Q/M/B/L/D, plus 20 unbound slots.
+
+## Advanced Techniques
+
+### Tricksplit
+Rapid double or triple split for extended range. Press split (Q or Space×2-3) in quick succession to project fragments further than a single split. Need ~2.6× target mass. Difficulty: intermediate.
+
+### Popsplit
+Intentional virus pop combined with split. Use a virus pop to scatter cells, then split from fragments to reach targets. Alt+Q hotkey. Difficulty: advanced.
+
+### Cannon / Self-feed
+Rapid W ejection between own split cells to transfer mass. Feed from small fragments to a chosen cell before splitting it at a target. Use macro feed (E) for rapid ejection. Difficulty: intermediate.
+
+### Line Split
+Straight-line rapid multi-split (x8 with 3 splits, x16 with 4 splits). All fragments travel in a line toward the cursor. Configurable delay, hold time, and guide lines. Difficulty: advanced.
+
+### Scan Trick
+Cursor position snaps to fixed directional increments (8-32 directions, configurable distance). Provides pixel-perfect cell positioning for split tricks. Options: rounded, left-mouse-only, status display. Difficulty: advanced.
+
+### Virus Shot
+Feed 7 W-presses into a virus to launch it toward the cursor at another player. Costs ~100-110 mass. Difficulty: beginner.
+
+### Bait-and-Switch
+Appear to feed or retreat to lure an opponent into range, then quickly split to consume them. Difficulty: intermediate.
+
+### Split Running
+Split in the same direction you are moving for a speed boost. Useful for chasing or escaping. Difficulty: beginner.
+
+## Legend Mod Feature Highlights (When Playing Expanding Land)
+
+Legend Mod (https://www.legendmod.ml/) adds 28 feature categories when playing Expanding Land:
+
+1. **Custom Skins** — PNG, JPG, GIF, SVG, video skins. IndexedDB cache (1,000 skins, 600 audio). Skin collections, checker, rotator.
+2. **Themes** — 8 built-in presets, ~160 theme properties, custom CSS variables. Theme Bridge synchronises game and settings panel.
+3. **Theme Workshop** — Create up to 30 custom themes with 5 versions each. Live preview, side-by-side comparison, gallery.
+4. **Settings Profiles** — Up to 30 named profiles. Auto-switching per server/mode/input device. 5 automatic backups.
+5. **Command Centre** — Fuzzy-search palette (Ctrl+K) for all settings and commands. Multi-language search. Favourites (30) and recents (12).
+6. **Multiboxing** — Up to 4 connections. Colour-coded rings, auto-respawn, switch after death, middle camera view.
+7. **Replay Studio** — Packet recording, timeline, bookmarks, variable speed (0.25x-4x), backward seeking, match history (50 lives).
+8. **Performance** — WebGL2, High DPI, FPS cap (0-240), adaptive performance (3 levels), performance diagnostics, net graph.
+9. **Animation** — Jelly physics, death particles, eat pulse, camera smoothing, spawn effects.
+10. **Chat** — Images, videos, emoticons, translation, mentions, sounds, 50 command slots, voice chat, team pings.
+11. **Sound Mixer** — 6 channels (master, chat, commands, gameplay, video, notifications). Audio ducking.
+12. **Minimap** — Rotating, grid, guides, ghost cells, trail (~60s), click-to-spectate, enlarge hotkey.
+13. **HUD Helpers** — Split ranges (single/double/triple/quad), merge countdown, relative mass, edge arrows, cell panel.
+14. **HUD Editor** — Drag/resize HUD elements. Up to 20 named layouts. Grid snapping.
+15. **Leaderboard** — Configurable limit (5-20), top 5 skins, hide bots, click-to-spectate, pass toast.
+16. **Stats and Analytics** — Mass graph, kill feed, death recap (20s, mass sparkline), analytics dashboard, notification centre (200 max).
+17. **Scan Trick and Line Split** — Cursor snapping (8-32 directions), line split (x8/x16), guide lines.
+18. **Companion** — Second-screen via BroadcastChannel. Mass, rank, minimap, leaderboard, chat. OBS source.
+19. **Privacy** — Streamer preset, stream mode, hide skin URL/name/country.
+20. **Accessibility** — Reduced motion, text scale (1.0-1.6x), HUD text scale, colour-blind safe preset.
+21. **Practice Arena** — Offline mode against bots. MultiOgar protocol. Personal bests with ghost replay.
+22. **Spectator Director** — Auto-camera following action. Watchlist, 20 bookmarks, cinematic camera, broadcast HUD.
+23. **Custom Macros** — 3 slots, up to 24 steps, dry run mode, safety limits (20ms split gap, 10ms feed gap).
+24. **Radial Menu** — Hold-point-release command menu. Up to 8 slots with any hotkey command.
+25. **User Scripts / Plugins** — 5 script slots, LMPlugins API, settings API, catalogue.
+26. **Lab** — Experimental feature toggles. Stored separately from settings.
+27. **Discovery** — Feature guide cards with one-tap toggles. Auto-opens after updates.
+28. **Additional Presets** — Competitive, Battery Saver, Reduced Motion, Custom/Clean HUD.
+
+## Glossary of Key Terms
+
+- **Cell**: The circular blob each player controls
+- **Mass**: Cell size/weight, displayed as a number; decays ~0.8% every 4 seconds
+- **Food/Pellets**: Small coloured dots worth +1 mass each
+- **Split**: Dividing your cell into two halves (Space key), up to 16 fragments
+- **Eject mass (W)**: Firing a small pellet toward cursor, costs ~15-16 mass
+- **Virus**: Spiky green circle that pops big cells into ~16 pieces; shoot with 7 W-presses
+- **Merge/Recombine**: Split cells rejoin after a timer (bigger = longer)
+- **Decay**: Automatic mass loss (~0.8% every 4 seconds)
+- **Ghost cell**: Transparent cell showing death location (EL-exclusive)
+- **Dynamic map**: Arena that auto-resizes (0.25× to 8×) based on player count
+- **Danger zone**: Outer ring during map contraction; anti-teaming penalty area
+- **Tricksplit**: Rapid double/triple split for extended range
+- **Popsplit**: Intentional virus pop combined with split
+- **Cannon/Self-feed**: Rapid W between own split cells for mass transfer
+- **Line split**: Straight-line rapid multi-split for maximum distance
+- **Scan trick**: Cursor snapping to fixed directional increments
+- **Teaming**: Two or more players cooperating; EL has anti-teaming system
+- **Multiboxing**: Controlling multiple game connections simultaneously (up to 4 in EL)
+- **Spectator**: 200+ slots with free-roam camera
+- **Coordinate scrambling**: Anti-cheat giving different position offsets per player
+- **Command Centre**: Fuzzy-search palette (Ctrl+K) for all settings and commands
+- **Theme Workshop**: Create up to 30 custom themes
+- **Settings Profile**: Named settings snapshot, switchable instantly
+- **Practice Arena**: Offline mode for practising against bots
+- **Replay Studio**: Full playback tool for recorded game replays
+- **HUD Editor**: Drag and resize HUD elements into named layouts
+- **LMEvents**: Hook API for user scripts to listen to game events
+
 ## Frequently Asked Questions
 
 **Is Expanding Land the official Agar.io service?**
@@ -192,4 +363,9 @@ Press Escape while alive to enter free spectate. Up to 200+ spectator slots are 
 - [Privacy policy](https://expanding.land/privacy.html)
 - [Terms of service](https://expanding.land/terms.html)
 - [Knowledge API](https://expanding.land/knowledge/api.json) — public read-only JSON resources
-- [Knowledge graph (JSON-LD)](https://expanding.land/knowledge/graph.jsonld)
+- [Knowledge graph (JSON-LD)](https://expanding.land/knowledge/graph.jsonld) — 32-entity structured data
+- [Glossary (JSON)](https://expanding.land/knowledge/glossary.json) — 30+ terms structured
+- [Techniques (JSON)](https://expanding.land/knowledge/techniques.json) — advanced gameplay techniques
+- [Settings (JSON)](https://expanding.land/knowledge/settings.json) — 300+ settings across 30 categories
+- [Extension (JSON)](https://expanding.land/knowledge/extension.json) — Chrome extension metadata
+- [Presets (JSON)](https://expanding.land/knowledge/presets.json) — theme and settings presets
