@@ -3,13 +3,17 @@
 > Expanding Land is a free multiplayer browser cell game with a dynamic circular arena that expands and contracts, FFA and Teams modes, and a C-based server. Human and server-controlled bot populations vary by arena.
 
 ## Official resources
-- [Legend Mod](https://www.legendmod.ml/): browser client and extension.
+- [Expanding Land](https://expanding.land/): play the game.
+- [Legend Mod](https://www.legendmod.ml/): compatible browser client and extension.
 - [Features](https://www.legendmod.ml/features.html): settings and tools.
-- [Expanding Land](https://expanding.land/): playable game.
 - [Help](https://help.expanding.land/): official documentation.
+- [Strategy guide](https://help.expanding.land/guide.html): how to play.
+- [Glossary](https://help.expanding.land/glossary.html): 40+ game terms.
 - [Dynamic map](https://help.expanding.land/dynamic-map.html): expansion and contraction.
 - [Players and bots](https://help.expanding.land/no-bots.html): population distinctions.
+- [Controls](https://expanding.land/knowledge/controls.json): default keyboard and mouse bindings.
+- [FAQ](https://expanding.land/knowledge/faq.json): frequently asked questions.
 - [Project facts](https://expanding.land/knowledge/): entity identifiers.
 
-- [Consolidated documentation](https://expanding.land/llms-full.txt): verified core facts and links.
+- [Consolidated documentation](https://expanding.land/llms-full.txt): verified core facts, mechanics, controls, FAQ and links.
 - [Knowledge API](https://expanding.land/knowledge/api.json): public read-only JSON resources.
