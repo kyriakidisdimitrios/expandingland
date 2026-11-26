@@ -254,8 +254,6 @@
             frame.contentWindow.postMessage(msg, IFRAME_ORIGINS[i]);
           } catch (e) { }
         }
-        // Also try wildcard as last resort
-        try { frame.contentWindow.postMessage(msg, '*'); } catch (e) { }
         console.log('[EL Relay] Forwarded Discord data into iframe');
         // Clean up
         try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
