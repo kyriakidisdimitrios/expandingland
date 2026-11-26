@@ -338,8 +338,24 @@
 
         var closeBtn = document.createElement('button');
         closeBtn.innerHTML = '✕';
-        closeBtn.style.cssText = 'background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;line-height:1;';
-        closeBtn.onclick = function () { document.body.removeChild(banner); };
+        /* a finger-sized target (the cross alone was about 20 px) */
+        closeBtn.style.cssText = 'background:transparent;border:none;color:#fff;font-size:20px;cursor:pointer;padding:0;line-height:1;min-width:40px;min-height:40px;margin:-8px -10px -8px 0;';
+        /* the game moves below the banner instead of being covered by it: its menu tabs, the top of the
+         * leaderboard and the team list were under the banner and could not be tapped */
+        var frame = document.getElementById('game-frame');
+        var fit = function () {
+          if (!frame) return;
+          var h = banner.parentNode ? banner.offsetHeight : 0;
+          frame.style.marginTop = h ? h + 'px' : '';
+          frame.style.height = h ? 'calc(100% - ' + h + 'px)' : '';
+        };
+        var ro = window.ResizeObserver ? new ResizeObserver(fit) : null;
+        closeBtn.onclick = function () {
+          document.body.removeChild(banner);
+          if (ro) ro.disconnect();
+          window.removeEventListener('resize', fit);
+          fit();
+        };
 
         actions.appendChild(downloadBtn);
         actions.appendChild(closeBtn);
@@ -347,6 +363,9 @@
         banner.appendChild(content);
         banner.appendChild(actions);
         document.body.prepend(banner);
+        fit();
+        if (ro) ro.observe(banner);
+        window.addEventListener('resize', fit);
       }
     })();
   </script>
