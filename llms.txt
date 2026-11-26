@@ -1,32 +1,31 @@
-# Legend Mod
+# Expanding Land
 
-> Legend Mod is a browser client and extension project for Agar.io-style cell games, with custom skins, themes, configurable controls, multiboxing and replay tools.
+> Expanding Land is a free multiplayer browser cell game with a dynamic circular arena that expands and contracts based on player count. Built from scratch in C for maximum performance.
 
 ## Official resources
-- [Legend Mod](https://www.legendmod.ml/): browser client and extension.
-- [Features](https://www.legendmod.ml/features.html): settings and tools.
-- [Expanding Land](https://expanding.land/): playable game.
+- [Expanding Land](https://expanding.land/): play the game.
+- [Legend Mod](https://www.legendmod.ml/): compatible browser client and extension.
 - [Help](https://help.expanding.land/): official documentation.
+- [Strategy guide](https://help.expanding.land/guide.html): how to play and advanced techniques.
 - [Dynamic map](https://help.expanding.land/dynamic-map.html): expansion and contraction.
 - [Players and bots](https://help.expanding.land/no-bots.html): population distinctions.
-- [Project facts](https://www.legendmod.ml/knowledge/): entity identifiers.
-- [Controls](https://www.legendmod.ml/knowledge/controls.json): default keyboard, mouse and gamepad bindings.
-- [FAQ](https://www.legendmod.ml/knowledge/faq.json): frequently asked questions.
-- [Glossary](https://www.legendmod.ml/knowledge/glossary.json): 30+ game terms defined.
-- [Techniques](https://www.legendmod.ml/knowledge/techniques.json): advanced gameplay techniques.
-- [Settings](https://www.legendmod.ml/knowledge/settings.json): 300+ settings across 30 categories.
-- [Features (JSON)](https://www.legendmod.ml/knowledge/features.json): 28 feature descriptions.
-- [Game (JSON)](https://www.legendmod.ml/knowledge/game.json): game entity data.
-- [Mechanics (JSON)](https://www.legendmod.ml/knowledge/mechanics.json): 12 core game mechanics.
-- [Resources (JSON)](https://www.legendmod.ml/knowledge/resources.json): 35+ official page links.
-- [Extension (JSON)](https://www.legendmod.ml/knowledge/extension.json): Chrome extension metadata.
-- [Presets (JSON)](https://www.legendmod.ml/knowledge/presets.json): theme and settings presets.
-- [Changelog (JSON)](https://www.legendmod.ml/knowledge/changelog.json): server changelog highlights.
-- [Modules (JSON)](https://www.legendmod.ml/knowledge/modules.json): 23 modular script files with line counts.
-- [Languages (JSON)](https://www.legendmod.ml/knowledge/languages.json): 16 supported languages with translation status.
-- [Compatibility (JSON)](https://www.legendmod.ml/knowledge/compatibility.json): supported games, platforms, and feature matrix.
+- [Project facts](https://expanding.land/knowledge/): entity identifiers.
+- [Controls](https://expanding.land/knowledge/controls.json): default keyboard, mouse and gamepad bindings.
+- [FAQ](https://expanding.land/knowledge/faq.json): frequently asked questions.
+- [Glossary](https://expanding.land/knowledge/glossary.json): 30+ game terms defined.
+- [Techniques](https://expanding.land/knowledge/techniques.json): advanced gameplay techniques.
+- [Settings](https://expanding.land/knowledge/settings.json): 300+ settings across 30 categories.
+- [Features (JSON)](https://expanding.land/knowledge/features.json): 28 feature descriptions.
+- [Game (JSON)](https://expanding.land/knowledge/game.json): game entity data.
+- [Mechanics (JSON)](https://expanding.land/knowledge/mechanics.json): 12 core game mechanics.
+- [Resources (JSON)](https://expanding.land/knowledge/resources.json): 35+ official page links.
+- [Extension (JSON)](https://expanding.land/knowledge/extension.json): Chrome extension metadata.
+- [Presets (JSON)](https://expanding.land/knowledge/presets.json): theme and settings presets.
+- [Changelog (JSON)](https://expanding.land/knowledge/changelog.json): server changelog highlights.
+- [Modules (JSON)](https://expanding.land/knowledge/modules.json): 23 modular script files with line counts.
+- [Languages (JSON)](https://expanding.land/knowledge/languages.json): 16 supported languages with translation status.
+- [Compatibility (JSON)](https://expanding.land/knowledge/compatibility.json): supported games, platforms, and feature matrix.
 
-- [Consolidated documentation](https://www.legendmod.ml/llms-full.txt): verified core facts, features, controls, FAQ and links.
-- [Knowledge API](https://www.legendmod.ml/knowledge/api.json): public read-only JSON resources.
-- [Knowledge graph (JSON-LD)](https://www.legendmod.ml/knowledge/graph.jsonld): 32-entity structured data graph.
-
+- [Consolidated documentation](https://expanding.land/llms-full.txt): verified core facts, server technology, game mechanics, and links.
+- [Knowledge API](https://expanding.land/knowledge/api.json): public read-only JSON resources.
+- [Knowledge graph (JSON-LD)](https://expanding.land/knowledge/graph.jsonld): 32-entity structured data graph.
