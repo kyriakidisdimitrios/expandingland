@@ -77,22 +77,86 @@ Expanding Land uses an exponential multiplier decay system (ported from Delta Se
 - Configurable parameters: at_extra_decay_base, at_compensation, at_split_loss, at_eject_loss, at_virus_pop_loss, at_danger_loss
 - Danger Zone: outer ring during map contraction adds +0.01 anti-teaming multiplier per cycle
 
+### Penalty Values (per action)
+| Action | Multiplier added |
+|--------|-----------------|
+| W press (eject) | +0.1 |
+| Split | +0.5 |
+| Virus pop | +0.5 |
+| Danger zone (per cycle) | +0.01 |
+| Compensation (per cycle) | -0.005 |
+
+### Decay Impact Examples
+| Multiplier | Effective decay rate |
+|------------|---------------------|
+| 5 | 1.51× normal decay |
+| 10 | 2.28× normal decay |
+| 20 | 5.19× normal decay |
+
+Teams mode override: `at_eject_loss=0.0` (W-pressing doesn't penalise in teams).
+
 ## Anti-Cheat
 
-Coordinate scrambling: each connected player receives different coordinate offsets from the server, preventing external tools from sharing exact player positions.
+### Coordinate Scrambling
+Each connected player receives unique coordinate offsets (scramble_x, scramble_y, scramble_id) from the server. These 3 components use an LCG PRNG (Linear Congruential Generator) seeded per connection, so external tools cannot share exact player positions across accounts.
+
+### Rate Limiting and Security
+- TLS ban table for abusive connections
+- WebSocket handshake rate limiting (per IP)
+- Constant-time password comparison to prevent timing attacks
+- MurmurHash3 for IP address hashing in ban lookups
+- IPv6 /64 prefix grouping (treats the same /64 subnet as one identity)
+- Maximum connections per IP enforced
 
 ## Server Technology
 
-- Written in pure C for maximum performance (~5ms tick, approximately 8× faster than typical Node.js implementations)
-- Supports up to 3,840 concurrent real players per arena
-- Encrypted WebSocket connections (WSS/TLS)
-- OpenMP parallelised for multi-core CPU scaling
-- Build flags: -O3 -march=native -flto -fopenmp (never -ffast-math)
+- Written in pure C for maximum performance (25 Hz tick rate = 40ms per tick; actual processing ~5ms, leaving ~35ms headroom)
+- Version: expanding-land v1.2.63
+- Supports up to 3,840 concurrent real players per arena (theoretical max: 131,072 connections)
+- Encrypted WebSocket connections (WSS/TLS via OpenSSL)
+- OpenMP parallelised for multi-core CPU scaling (3 worker threads + 1 main, max 4)
+- Build flags: -O3 -march=native -flto -fopenmp (never -ffast-math — strict IEEE 754 required for collision math)
+- LZ4 compression for packets ≥ 64 bytes
+- Custom binary protocol with opcodes (0x10 UpdateNodes, 0x12 ClearAll, 0xFE/0xFF handshake)
 - Live /status endpoint: https://ffa.legendmod.ml:8080/status (player count, spectators, uptime, map scale)
-- Quadtree spatial indexing (MAX_QUERY_NODES 65,536)
-- MAX_VIEW_NODES 16,384 OOM protection
-- Incremental food grid with O(1) bucket removal
-- Deferred view_state clearing to avoid O(connected × removed) per tick
+
+### Spatial Indexing
+- **QuadTree**: For dynamic cells (players, ejected, viruses). Rebuilt every tick. 128 items per leaf, 8 depth levels, MAX_QUERY_NODES 65,536
+- **FoodGrid**: 256×256 spatial grid for food cells only. Lazy bucket allocation, O(1) removal
+- **BotGrid**: 64×64 spatial grid for bot perception, rebuilt every tick
+- MAX_VIEW_NODES 16,384 OOM protection with QuickSelect fallback
+
+### Performance Optimisations
+- SSE2 SIMD intrinsics for AABB viewport containment tests (2 SIMD comparisons vs 4 scalar branches)
+- Inlined O(N) QuickSelect with median-of-three pivoting for viewport truncation
+- Speed lookup table: 4,096-entry precomputed `88.0 × pow(radius, −0.4396754)` avoids pow() per tick
+- 2-bit packed view_state: 4 cells per byte, 4× memory savings
+- Transparent Huge Pages (Linux): madvise(MADV_HUGEPAGE) for cells (~891MB), quadtree (~177MB), players (~222MB)
+- Branch prediction hints: LIKELY()/UNLIKELY() macros via __builtin_expect
+- Cache prefetching: 4-iteration lookahead via __builtin_prefetch
+- Deferred cell free queue to avoid stale pointers during send_updates
+- Pull-model dirty cells with per-cell coalescing via last_evt_tick
+
+### OpenMP Parallel Regions
+1. Player movement — schedule(dynamic, 16)
+2. Mass decay — schedule(dynamic, 32)
+3. Leaderboard sort — schedule(dynamic, 16)
+4. Viewport updates — schedule(dynamic, 32)
+5. Bot AI — schedule(dynamic, 32)
+
+### Threading Model
+- Main thread: game loop (25 Hz fixed-deadline) + networking (epoll on Linux)
+- Watchdog thread: detached pthread, 5s check interval, 60s fatal timeout
+- OpenMP workers: parallel simulation loops
+- No write worker threads — nonblocking socket readiness
+
+### Mother Cell Mechanics
+- Mother cells spawn on the map as large neutral entities
+- Spawn radius: 160, maximum radius: 210
+- Ejects food pellets at a rate of 2 per tick (every 4 ticks = 6.25 per second)
+- Spurt velocity: 200 + random(150) units
+- Spawns 6 pellets per danger phase (map contraction burst)
+- Cannot be eaten by players; serves as a renewable food source
 
 ### Recent Server Improvements (2026)
 - Cinematic death sequence: particle bursts, eater pulse, camera shake, 600ms absorption animation
@@ -369,3 +433,8 @@ Press Escape while alive to enter free spectate. Up to 200+ spectator slots are 
 - [Settings (JSON)](https://expanding.land/knowledge/settings.json) — 300+ settings across 30 categories
 - [Extension (JSON)](https://expanding.land/knowledge/extension.json) — Chrome extension metadata
 - [Presets (JSON)](https://expanding.land/knowledge/presets.json) — theme and settings presets
+- [FAQ (JSON)](https://expanding.land/knowledge/faq.json) — 30 frequently asked questions
+- [Languages (JSON)](https://expanding.land/knowledge/languages.json) — 16 supported languages with status
+- [Compatibility (JSON)](https://expanding.land/knowledge/compatibility.json) — supported games and platforms
+- [Modules (JSON)](https://expanding.land/knowledge/modules.json) — Legend Mod module architecture
+- [Controls (JSON)](https://expanding.land/knowledge/controls.json) — 146+ configurable hotkeys
