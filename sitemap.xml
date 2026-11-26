@@ -3,7 +3,6 @@
   <url><loc>https://expanding.land/</loc><lastmod>2026-11-25</lastmod></url>
   <!-- privacy.html and terms.html excluded: marked noindex, follow -->
   <url><loc>https://expanding.land/knowledge/</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://expanding.land/skins/</loc><lastmod>2026-11-25</lastmod></url>
-  <url><loc>https://expanding.land/themes/</loc><lastmod>2026-11-25</lastmod></url>
+  <!-- skins/ and themes/ excluded: marked noindex, follow (iframe shells) -->
   <!-- apps/android/ excluded: no index.html exists yet -->
 </urlset>
