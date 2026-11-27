@@ -112,7 +112,7 @@ Each connected player receives unique coordinate offsets (scramble_x, scramble_y
 
 - Written in pure C for maximum performance (25 Hz tick rate = 40ms per tick; actual processing ~5ms, leaving ~35ms headroom)
 - Version: expanding-land v1.2.63
-- Supports up to 3,840 concurrent real players per arena (theoretical max: 131,072 connections)
+- Supports up to 3,840 simultaneous players per arena (theoretical max: 131,072 connections)
 - Encrypted WebSocket connections (WSS/TLS via OpenSSL)
 - OpenMP parallelised for multi-core CPU scaling (3 worker threads + 1 main, max 4)
 - Build flags: -O3 -march=native -flto -fopenmp (never -ffast-math — strict IEEE 754 required for collision math)
@@ -387,7 +387,7 @@ Yes. The server controls expansion and contraction of the circular arena based o
 Not necessarily. Human and server-controlled bot counts vary by arena. In-game counters distinguish the populations.
 
 **What is the maximum player count?**
-Expanding Land supports up to 3,840 concurrent real players per arena. Actual counts depend on server configuration.
+Expanding Land supports up to 3,840 simultaneous players per arena. Actual counts depend on server configuration.
 
 **Is Expanding Land free?**
 Yes. No subscription or payment required. Guest play available without login.

@@ -2,7 +2,7 @@
   "id": "/",
   "name": "Expanding Land",
   "short_name": "Expanding Land",
-  "description": "Free multiplayer IO game with 3840 real players, no bots. Resizable map (0.25x to 8x), anti-cheat, encrypted connections, ultra-low latency.",
+  "description": "Free multiplayer browser cell game with a circular map that expands and contracts (0.25x to 8x), FFA and Teams, anti-cheat and encrypted connections.",
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",
